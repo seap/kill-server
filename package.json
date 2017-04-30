@@ -1,0 +1,37 @@
+{
+  "name": "kill-server",
+  "version": "1.0.0",
+  "description": "kill server",
+  "main": "index.js",
+  "dependencies": {
+    "babel-preset-env": "^1.4.0",
+    "babel-register": "^6.24.1",
+    "debug": "^2.6.4",
+    "koa": "^2.2.0",
+    "koa-bodyparser": "^2.5.0",
+    "koa-generic-session": "^1.11.5",
+    "koa-router": "^7.1.1",
+    "lodash": "^4.17.4",
+    "mongodb": "^2.2.26",
+    "node-fetch": "^1.6.3",
+    "socket.io": "^1.7.3",
+    "winston": "^2.3.1",
+    "ws": "^2.3.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js",
+    "pm2": "pm2 start index.js --name kill",
+    "pm2:prd": "NODE_ENV=\"production\" pm2 start index.js -i 0 --name kill"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seap/kill-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/seap/kill-server/issues"
+  },
+  "homepage": "https://github.com/seap/kill-server#readme"
+}
