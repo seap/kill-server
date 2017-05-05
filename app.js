@@ -10,8 +10,8 @@ import router from './router'
 
 const app = new Koa()
 
-app.keys = sessionKeys
-app.use(convert(session({ key: cookieKey })))
+// app.keys = sessionKeys
+// app.use(convert(session({ key: cookieKey })))
 app.use(convert(bodyParser()))
 app.use(router.routes())
 app.use(router.allowedMethods())
@@ -37,7 +37,8 @@ ws.on('connection', socket => {
   // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
   socket.on('message', message => {
-    console.log('received: %s', message)
+    const obj = JSON.parse(message)
+    console.log('received: %s', obj.uid)
     socket.send('something')
   })
   socket.send('something')

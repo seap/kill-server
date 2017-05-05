@@ -23,6 +23,10 @@ export default {
     code: 9000,
     msg: '数据库异常'
   },
+  wechatError: {
+    code: 9001,
+    msg: '微信服务错误'
+  },
   unknownError: {
     code: 9999,
     msg: '未知错误'
