@@ -1,14 +1,14 @@
 import Router from 'koa-router'
-import authorize from '../middlewares/authorize'
-import { getUserInfo } from '../controllers/user'
+// import authorize from '../middlewares/authorize'
+import { login } from '../controllers/user'
 
 const router = new Router({
   prefix: '/api'
 })
 
-router.get('/user/:userId', authorize, getUserInfo)
+// router.get('/user/:userId', authorize, getUserInfo)
 
-// wechat router
-router.get('/wechat/')
+// wechat login
+router.get('/wechat/login/:code', login)
 
 export default router
