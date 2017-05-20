@@ -6,7 +6,9 @@
   "dependencies": {
     "babel-preset-env": "^1.4.0",
     "babel-register": "^6.24.1",
+    "crypto": "0.0.3",
     "debug": "^2.6.4",
+    "jsonwebtoken": "^7.4.0",
     "koa": "^2.2.0",
     "koa-bodyparser": "^2.5.0",
     "koa-generic-session": "^1.11.5",

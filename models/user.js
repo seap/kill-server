@@ -61,16 +61,17 @@ export async function findListByUserIdAndDate(userId, month, conn) {
   }
 }
 
-export async function findOneByUserIdAndDate(userId, day, conn) {
+// find user info by openid
+export async function findByOpenId(openid, conn) {
   let db = null
   try {
     db = conn || await connect() // use outside connection
-    const collection = db.collection('diary')
-    const doc = await collection.findOne({ userId, day })
-    logger.log('debug', 'find diary: %j', doc)
+    const collection = db.collection('user')
+    const doc = await collection.findOne({ openid })
+    logger.log('debug', 'find User: %j', doc)
     return doc
   } catch (e) {
-    logger.log('error', 'find diary, userid: %s , day: %s', userId, day)
+    logger.log('error', 'find User, openid: %s', openid)
     throw e
   } finally {
     conn || (db && db.close())

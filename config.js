@@ -17,3 +17,17 @@ export const wechat = {
   appid: 'wx3b7e09491c848678',
   secret: '0abb388a563afbda738ca289da59a735'
 }
+
+// token config
+export const tokenConfig = {
+  secret: 'seayang',
+  expire: 60 * 60 * 24 * 7 // 7 days
+}
+
+export const mongoUrl = isProduction
+  ? 'mongodb://127.0.0.1:27017/biz'
+  : 'mongodb://127.0.0.1:27017/biz'
+
+export const mongoOpt = isProduction
+  ? {}
+  : {}

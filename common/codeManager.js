@@ -15,6 +15,10 @@ export default {
     code: 2000,
     msg: '请求参数有误'
   },
+  paramDuplicated: {
+    code: 2001,
+    msg: '数据重复'
+  },
   notExist: {
     code: 2002,
     msg: '数据不存在'

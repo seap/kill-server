@@ -4,6 +4,7 @@ import convert from 'koa-convert'
 import bodyParser from 'koa-bodyparser'
 import session from 'koa-generic-session'
 import { Server as WebSocket } from 'ws'
+import websocket from './services/websocket'
 import logger from './common/logger'
 import { port, sessionKeys, cookieKey } from './config'
 import router from './router'
@@ -29,33 +30,7 @@ app.on('error', (err, ctx) => {
 })
 
 const server = http.createServer(app.callback())
-const ws = new WebSocket({ server })
-ws.on('connection', socket => {
-  console.log('one connection');
-  // const location = url.parse(ws.upgradeReq.url, true);
-  // You might use location.query.access_token to authenticate or share sessions
-  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-
-  socket.on('message', message => {
-    const obj = JSON.parse(message)
-    console.log('received: %s', obj.uid)
-    socket.send('something')
-  })
-  socket.send('something')
-})
-
-// const io = socketIO(server)
-//
-// io.on('connection', socket => {
-//   console.log('new connection');
-//   socket.on('message', (data, cb) => {
-//     console.log('message');
-//   })
-//
-//   socket.on('disconnect', () => {
-//   })
-// })
-
+websocket(server) 
 server.listen(port, () => {
   console.log(`Listening on port ${port}`)
 })
