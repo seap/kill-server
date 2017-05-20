@@ -8,20 +8,20 @@ export async function insert(doc, conn) {
   let db = null
   try {
     db = conn || await connect() // use outside connection
-    const collection = db.collection('organization')
-    const organization = _.clone(doc)
+    const collection = db.collection('role')
+    const role = _.clone(doc)
     // insert new one
-    organization.updatedAt = organization.createdAt = new Date()
-    organization.id = await nextSeq('organization', db)  // generate increased id
-    const result = await collection.insertOne(organization)
-    logger.log('debug', 'insert organization result: %j', result)
+    role.updatedAt = role.createdAt = new Date()
+    role.id = await nextSeq('role', db)  // generate increased id
+    const result = await collection.insertOne(role)
+    logger.log('debug', 'insert role result: %j', result)
 
     if (result.insertedCount === 1) {
-      return organization
+      return role
     }
-    throw new Error(`organization_insert_error: ${result}`)
+    throw new Error(`role_insert_error: ${result}`)
   } catch (e) {
-    logger.log('error', 'insert organization')
+    logger.log('error', 'insert role')
     throw e
   } finally {
     conn || (db && db.close())
@@ -33,19 +33,19 @@ export async function update(doc, conn) {
   let db = null
   try {
     db = conn || await connect() // use outside connection
-    const collection = db.collection('organization')
-    const organization = _.clone(doc)
+    const collection = db.collection('role')
+    const role = _.clone(doc)
     // insert new one
-    organization.updatedAt = new Date()
-    const result = await collection.updateOne(_.pick(organization, ['id']), { $set: doc })
-    logger.log('debug', 'update organization result: %j', result)
+    role.updatedAt = new Date()
+    const result = await collection.updateOne(_.pick(role, ['id']), { $set: doc })
+    logger.log('debug', 'update role result: %j', result)
 
     if (result.matchedCount === 1) {
-      return organization
+      return role
     }
-    throw new Error(`organization_update_error: ${result}`)
+    throw new Error(`role_update_error: ${result}`)
   } catch (e) {
-    logger.log('error', 'update organization')
+    logger.log('error', 'update role')
     throw e
   } finally {
     conn || (db && db.close())
@@ -57,35 +57,35 @@ export async function remove(id, conn) {
   let db = null
   try {
     db = conn || await connect() // use outside connection
-    const collection = db.collection('organization')
+    const collection = db.collection('role')
     const result = await collection.deleteOne({ id })
-    logger.log('debug', 'delete organization: %j', result)
+    logger.log('debug', 'delete role: %j', result)
     if (result.deletedCount === 1) {
       return true
     }
     return false
   } catch (e) {
-    logger.log('error', 'remove organization, id: %s', id)
+    logger.log('error', 'remove role, id: %s', id)
     throw e
   } finally {
     conn || (db && db.close())
   }
 }
 
-// find organization list
+// find role list
 export async function findList(conn) {
   let db = null
   try {
     db = conn || await connect() // use outside connection
-    const collection = db.collection('organization')
+    const collection = db.collection('role')
     const docs = await collection
       // .find({}, {_id: 0})
       .find({})
       .toArray()
-    logger.log('debug', 'find organization list: %j', docs)
+    logger.log('debug', 'find role list: %j', docs)
     return docs
   } catch (e) {
-    logger.log('error', 'find organization list')
+    logger.log('error', 'find role list')
     throw e
   } finally {
     conn || (db && db.close())

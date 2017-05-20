@@ -82,6 +82,23 @@ export async function updateDepartment(ctx, next) {
   }
 }
 
+export async function updateDepartmentStatus(ctx, next) {
+  try {
+    const id = parseInt(ctx.params.id)
+    const { status } = ctx.params
+    if (status !== '0' && status !== '1') { 
+      // 只支持两种状态， 0: 有效, 1: 失效（封存）
+      return ctx.body = codeManager.paramError
+    }
+    logger.log('debug', 'update department status: %s', status)
+    const result = await update({ id, status })
+    ctx.body = Object.assign({}, codeManager.success, { data: result })
+  } catch (e) {
+    logger.log('error', e)
+    ctx.body = codeManager.unknownError
+  }
+}
+
 export async function enableDepartment(ctx, next) {
   try {
     const id = parseInt(ctx.params.id)
