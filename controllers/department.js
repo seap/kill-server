@@ -9,7 +9,6 @@ function validator(obj) {
     return false
   }
   const department = {}
-  department.code = _.trim(obj.code)
   department.name = _.trim(obj.name)
   department.owner = _.trim(obj.owner)
   // check the required attributes 
@@ -22,6 +21,7 @@ function validator(obj) {
     }
   }
   // not necessary
+  department.parentId = _.trim(obj.parentId)
   department.organization = _.trim(obj.organization)
   department.remark = _.trim(obj.remark)
   return department
@@ -30,14 +30,10 @@ function validator(obj) {
 
 export async function insertDepartment(ctx, next) {
   try {
-    logger.log('debug', 'department: ', ctx.request.body, {})
+    logger.log('debug', 'insertDepartment: ', ctx.request.body, {})
     const department = validator(ctx.request.body)
     if (!department) {
       return ctx.body = codeManager.paramError
-    }
-    const duplicated = await findByCode(department.code)
-    if (duplicated) {
-      return ctx.body = Object.assign({}, codeManager.paramDuplicated, {msg: '部门编号已经存在！'})
     }
     department.status = '0' // 默认有效
     const result = await insert(department)
@@ -47,6 +43,44 @@ export async function insertDepartment(ctx, next) {
     ctx.body = codeManager.unknownError
   }
 }
+
+// export async function insertChildDepartment(ctx, next) {
+//   try {
+//     const { parentCode } = ctx.params
+//     logger.log('debug', 'parentCode: %s', parentCode)
+//     logger.log('debug', 'department: ', ctx.request.body, {})
+//     const childDepartment = validator(ctx.request.body)
+//     if (!childDepartment) {
+//       return ctx.body = codeManager.paramError
+//     }
+//     childDepartment.status = '0' // 默认有效
+
+//     const codes = parentCode.split('-')
+//     const department = await findByCode(codes[0])
+//     if (!department) {
+//       return ctx.body = Object.assign({}, codeManager.paramError, { msg: '部门编号有误！' })
+//     }
+//     department.children = department.children || []
+//     let children = department.children
+//     for (let i = 1; i < code.length; i++) {
+//       for (let child of children) {
+//         if (child.code == code[i]) {
+//           child.children = child.children || []
+//           children = child.children
+//           break
+//         }
+//       }
+//     }
+//     consolo.log('children: ', children)
+//     children.insert(childDepartment)
+
+//     const result = await update(department)
+//     ctx.body = Object.assign({}, codeManager.success, { data: result })
+//   } catch (e) {
+//     logger.log('error', e)
+//     ctx.body = codeManager.unknownError
+//   }
+// }
 
 export async function deleteDepartment(ctx, next) {
   try {

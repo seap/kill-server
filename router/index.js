@@ -18,7 +18,7 @@ router.post('/user', updateUserInfo)
 
 // department
 router.get('/department', findDepartment)
-router.post('/department', insertDepartment)
+router.post('/department', insertDepartment) 
 router.put('/department/:id', updateDepartment)
 router.put('/department/:id/:status', updateDepartmentStatus)
 router.delete('/department/:id', deleteDepartment)
