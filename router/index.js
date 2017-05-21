@@ -5,6 +5,7 @@ import { insertDepartment, updateDepartment, deleteDepartment, findDepartment, u
 import { insertOrganization, updateOrganization, deleteOrganization, findOrganization, updateOrganizationStatus } from '../controllers/organization'
 import { insertPosition, updatePosition, deletePosition, findPosition, updatePositionStatus } from '../controllers/position'
 import { insertRole, updateRole, deleteRole, findRole, updateRoleStatus } from '../controllers/role'
+import { insertStaff, updateStaff, deleteStaff, findStaff, updateStaffStatus } from '../controllers/staff'
 
 const router = new Router({
   prefix: '/api'
@@ -44,4 +45,10 @@ router.put('/role/:id', updateRole)
 router.put('/role/:id/:status', updateRoleStatus)
 router.delete('/role/:id', deleteRole)
 
+// staff
+router.get('/staff', findStaff)
+router.post('/staff', insertStaff)
+router.put('/staff/:id', updateStaff)
+router.put('/staff/:id/:status', updateStaffStatus)
+router.delete('/staff/:id', deleteStaff)
 export default router
