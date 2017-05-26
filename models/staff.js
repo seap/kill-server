@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { ObjectId } from 'mongodb'
 import { nextSeq } from './counter'
 import connect from './db'
 import logger from '../common/logger'
@@ -37,7 +38,8 @@ export async function update(doc, conn) {
     const staff = _.clone(doc)
     // insert new one
     staff.updatedAt = new Date()
-    const result = await collection.updateOne(_.pick(staff, ['id']), { $set: doc })
+    // const result = await collection.updateOne({ _id: ObjectId(doc._id) }, { $set: doc })
+    const result = await collection.updateOne({ id: doc.id }, { $set: doc })
     logger.log('debug', 'update staff result: %j', result)
 
     if (result.matchedCount === 1) {
@@ -79,8 +81,7 @@ export async function findList(conn) {
     db = conn || await connect() // use outside connection
     const collection = db.collection('staff')
     const docs = await collection
-      // .find({}, {_id: 0})
-      .find({})
+      .find({}, { password: 0 })
       .toArray()
     logger.log('debug', 'find staff list: %j', docs)
     return docs

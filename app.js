@@ -3,16 +3,21 @@ import Koa from 'koa'
 import convert from 'koa-convert'
 import bodyParser from 'koa-bodyparser'
 import session from 'koa-generic-session'
+import MongoStore from 'koa-generic-session-mongo'
 import { Server as WebSocket } from 'ws'
 import websocket from './services/websocket'
 import logger from './common/logger'
-import { port, sessionKeys, cookieKey } from './config'
+import { port, mongoUrl, sessionKeys, cookieKey } from './config'
 import router from './router'
 
 const app = new Koa()
 
-// app.keys = sessionKeys
-// app.use(convert(session({ key: cookieKey })))
+app.keys = sessionKeys
+app.use(convert(session({
+  store: new MongoStore({ url: mongoUrl }),
+  key: cookieKey
+})))
+
 app.use(convert(bodyParser()))
 app.use(router.routes())
 app.use(router.allowedMethods())

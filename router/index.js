@@ -5,13 +5,15 @@ import { insertDepartment, updateDepartment, deleteDepartment, findDepartment, u
 import { insertOrganization, updateOrganization, deleteOrganization, findOrganization, updateOrganizationStatus } from '../controllers/organization'
 import { insertPosition, updatePosition, deletePosition, findPosition, updatePositionStatus } from '../controllers/position'
 import { insertRole, updateRole, deleteRole, findRole, updateRoleStatus } from '../controllers/role'
-import { insertStaff, updateStaff, deleteStaff, findStaff, updateStaffStatus } from '../controllers/staff'
+import { insertStaff, updateStaff, deleteStaff, findStaff, updateStaffStatus, updateStaffPassword } from '../controllers/staff'
 
 const router = new Router({
   prefix: '/api'
 })
 
 router.get('/user/:userId', authorize)
+
+router.post('/')
 
 // wechat login
 router.get('/wechat/login/:code', wechatLogin)
@@ -46,9 +48,10 @@ router.put('/role/:id/:status', updateRoleStatus)
 router.delete('/role/:id', deleteRole)
 
 // staff
-router.get('/staff', findStaff)
+router.get('/staff', authorize, findStaff)
 router.post('/staff', insertStaff)
 router.put('/staff/:id', updateStaff)
+router.put('/staff/:id/password', updateStaffPassword)
 router.put('/staff/:id/:status', updateStaffStatus)
 router.delete('/staff/:id', deleteStaff)
 export default router
