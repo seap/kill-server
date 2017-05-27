@@ -17,6 +17,7 @@ app.use(convert(session({
   store: new MongoStore({ url: mongoUrl }),
   key: cookieKey
 })))
+// app.use(convert(session()))
 
 app.use(convert(bodyParser()))
 app.use(router.routes())

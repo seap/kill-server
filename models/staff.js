@@ -92,3 +92,20 @@ export async function findList(conn) {
     conn || (db && db.close())
   }
 }
+
+// find user info by id
+export async function findById(id, conn) {
+  let db = null
+  try {
+    db = conn || await connect() // use outside connection
+    const collection = db.collection('staff')
+    const doc = await collection.findOne({ id })
+    logger.log('debug', 'find staff: %j', doc)
+    return doc
+  } catch (e) {
+    logger.log('error', 'find User, id: %s', id)
+    throw e
+  } finally {
+    conn || (db && db.close())
+  }
+}

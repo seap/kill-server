@@ -7,8 +7,12 @@ export default {
     code: 1000,
     msg: '用户未登录'
   },
-  noResourse: {
+  wrongUserOrPsd: {
     code: 1001,
+    msg: '用户名或密码有误'
+  },
+  noResourse: {
+    code: 1101,
     msg: '没有资源权限'
   },
   paramError: {
