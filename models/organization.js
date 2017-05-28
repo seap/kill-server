@@ -37,7 +37,7 @@ export async function update(doc, conn) {
     const organization = _.clone(doc)
     // insert new one
     organization.updatedAt = new Date()
-    const result = await collection.updateOne(_.pick(organization, ['id']), { $set: doc })
+    const result = await collection.updateOne(_.pick(organization, ['id']), { $set: organization })
     logger.log('debug', 'update organization result: %j', result)
 
     if (result.matchedCount === 1) {

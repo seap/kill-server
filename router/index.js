@@ -1,7 +1,7 @@
 import Router from 'koa-router'
 import authorize from '../middlewares/authorize'
 import { wechatLogin, updateUserInfo } from '../controllers/user'
-import { login } from '../controllers/passport'
+import { login, logout, getUserInfo } from '../controllers/passport'
 import { insertDepartment, updateDepartment, deleteDepartment, findDepartment, updateDepartmentStatus } from '../controllers/department'
 import { insertOrganization, updateOrganization, deleteOrganization, findOrganization, updateOrganizationStatus } from '../controllers/organization'
 import { insertPosition, updatePosition, deletePosition, findPosition, updatePositionStatus } from '../controllers/position'
@@ -21,7 +21,9 @@ router.get('/wechat/login/:code', wechatLogin)
 router.post('/user', updateUserInfo)
 
 // login
-router.post('/login', login)
+router.post('/passport/login', login)
+router.get('/passport/logout', logout)
+router.get('/passport/user', getUserInfo)
 
 // department
 router.get('/department', findDepartment)

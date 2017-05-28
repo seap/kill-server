@@ -13,7 +13,8 @@ export async function insert(doc, conn) {
     const staff = _.clone(doc)
     // insert new one
     staff.updatedAt = staff.createdAt = new Date()
-    staff.id = await nextSeq('staff', db)  // generate increased id
+    const id = await nextSeq('staff', db)  // generate increased id
+    staff.id = id + ''
     const result = await collection.insertOne(staff)
     logger.log('debug', 'insert staff result: %j', result)
 
@@ -39,7 +40,7 @@ export async function update(doc, conn) {
     // insert new one
     staff.updatedAt = new Date()
     // const result = await collection.updateOne({ _id: ObjectId(doc._id) }, { $set: doc })
-    const result = await collection.updateOne({ id: doc.id }, { $set: doc })
+    const result = await collection.updateOne({ id: doc.id }, { $set: staff })
     logger.log('debug', 'update staff result: %j', result)
 
     if (result.matchedCount === 1) {
@@ -75,13 +76,13 @@ export async function remove(id, conn) {
 }
 
 // find staff list
-export async function findList(conn) {
+export async function findList(condition = {}, conn) {
   let db = null
   try {
     db = conn || await connect() // use outside connection
     const collection = db.collection('staff')
     const docs = await collection
-      .find({}, { password: 0 })
+      .find(condition, { password: 0 })
       .toArray()
     logger.log('debug', 'find staff list: %j', docs)
     return docs
@@ -93,13 +94,13 @@ export async function findList(conn) {
   }
 }
 
-// find user info by id
-export async function findById(id, conn) {
+// find user info { id }
+export async function findOne(opt, conn) {
   let db = null
   try {
     db = conn || await connect() // use outside connection
     const collection = db.collection('staff')
-    const doc = await collection.findOne({ id })
+    const doc = await collection.findOne(opt)
     logger.log('debug', 'find staff: %j', doc)
     return doc
   } catch (e) {

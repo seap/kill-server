@@ -37,7 +37,7 @@ export async function update(doc, conn) {
     const role = _.clone(doc)
     // insert new one
     role.updatedAt = new Date()
-    const result = await collection.updateOne(_.pick(role, ['id']), { $set: doc })
+    const result = await collection.updateOne(_.pick(role, ['id']), { $set: role })
     logger.log('debug', 'update role result: %j', result)
 
     if (result.matchedCount === 1) {

@@ -68,9 +68,8 @@ export async function insertStaff(ctx, next) {
 
 export async function deleteStaff(ctx, next) {
   try {
-    const id = parseInt(ctx.params.id)
+    const id = ctx.params.id
     logger.log('debug', 'delete staff id: ', id)
-
     const result = await remove(id)
     if (result) {
       ctx.body = Object.assign({}, codeManager.success, { data: { id } })
@@ -85,7 +84,7 @@ export async function deleteStaff(ctx, next) {
 
 export async function updateStaff(ctx, next) {
   try {
-    const id = parseInt(ctx.params.id)
+    const id = ctx.params.id
     const staff = validator(ctx.request.body)
     if (!staff) {
       return ctx.body = codeManager.paramError
@@ -102,7 +101,7 @@ export async function updateStaff(ctx, next) {
 
 export async function updateStaffStatus(ctx, next) {
   try {
-    const id = parseInt(ctx.params.id)
+    const id = ctx.params.id
     const { status } = ctx.params
     if (status !== '0' && status !== '1') { 
       // 只支持两种状态， 0: 有效, 1: 失效（封存）
@@ -119,7 +118,7 @@ export async function updateStaffStatus(ctx, next) {
 
 export async function updateStaffPassword(ctx, next) {
   try {
-    const id = +ctx.params.id
+    const id = ctx.params.id
     const password = _.trim(ctx.request.body.password)
     logger.log('debug', 'update staff password: %s', password)
 
@@ -140,7 +139,32 @@ export async function updateStaffPassword(ctx, next) {
 
 export async function findStaff(ctx, next) {
   try {
-    const result = await findList()
+    const { keyword, status } = ctx.request.query
+    const conditions = []
+    if (status) {
+      conditions.push({ status })
+    }
+    if (keyword) {
+      let regExp
+      try {
+        regExp = new RegExp(keyword)
+      } catch (e) {
+        regExp = /(?:)/
+      }
+      conditions.push({ 
+        $or: [
+          { id: regExp },
+          { name: regExp },
+          { mobile: regExp },
+          { remark: regExp }
+        ]
+      })
+    }
+    const where = {}
+    if (conditions.length > 0) {
+      where.$and = conditions
+    }
+    const result = await findList(where)
     ctx.body = Object.assign({}, codeManager.success, { data: result })
   } catch (e) {
     logger.log('error', e)

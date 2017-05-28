@@ -17,7 +17,7 @@ export async function insertOrUpdate(doc, conn) {
     // find and update, at first
     const diary = _.clone(doc)
     diary.updatedAt = new Date()
-    let result = await collection.updateOne(_.pick(diary, ['userId', 'day']), { $set: doc })
+    let result = await collection.updateOne(_.pick(diary, ['userId', 'day']), { $set: diary })
     logger.log('debug', 'update diary result: %j', result)
 
     if (result.matchedCount === 1) {

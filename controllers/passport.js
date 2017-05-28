@@ -2,7 +2,7 @@ import _ from 'lodash'
 import crypto from 'crypto'
 import logger from '../common/logger'
 import codeManager from '../common/codeManager'
-import { findById } from '../models/staff'
+import { findOne } from '../models/staff'
 
 // validate login option
 function validator(obj) {
@@ -32,19 +32,33 @@ export async function login(ctx, next) {
       return ctx.body = codeManager.paramError
     }
     
-    const staff = await findById(+opt.user)
+    const staff = await findOne({ id: opt.user, systemUser: '0', status: '0' })
     if (!staff) {
       return ctx.body = codeManager.wrongUserOrPsd
     }
-    if (staff && (staff.password == crypto.createHash('md5').update(opt.password).digest('hex'))) {
+    if (staff && (staff.password === crypto.createHash('md5').update(opt.password).digest('hex'))) {
       ctx.session.isLogin = true // session设置
+      ctx.session.user = _.pick(staff, ['name', 'organization', 'department', 'position', 'role'])
       return ctx.body = Object.assign({}, codeManager.success,
-        { msg: '登录成功！', data: _.pick(staff, ['name', 'organization', 'department', 'position', 'role']) })
+        { msg: '登录成功！' })
     } else {
       return ctx.body = codeManager.wrongUserOrPsd
     }
   } catch (e) {
     logger.log('error', e)
     ctx.body = codeManager.unknownError
+  }
+}
+
+export async function logout(ctx, next) {
+  ctx.session.isLogin = false
+  ctx.body = codeManager.success
+}
+
+export async function getUserInfo(ctx, next) {
+  if (ctx.session.isLogin ) {
+    ctx.body = Object.assign({}, codeManager.success, { data: ctx.session.user })
+  } else {
+    ctx.body = Object.assign({}, codeManager.noLogin)
   }
 }
