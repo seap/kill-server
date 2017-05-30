@@ -1,4 +1,3 @@
-// name 商品名称
 import _ from 'lodash'
 import { nextSeq } from './counter'
 import connect from './db'
@@ -9,20 +8,20 @@ export async function insert(doc, conn) {
   let db = null
   try {
     db = conn || await connect() // use outside connection
-    const collection = db.collection('product')
-    const product = _.clone(doc)
+    const collection = db.collection('category')
+    const category = _.clone(doc)
     // insert new one
-    product.updatedAt = product.createdAt = new Date()
-    product.id = await nextSeq('product', db)  // generate increased id
-    const result = await collection.insertOne(product)
-    logger.log('debug', 'insert product result: %j', result)
+    category.updatedAt = category.createdAt = new Date()
+    category.id = await nextSeq('category', db)  // generate increased id
+    const result = await collection.insertOne(category)
+    logger.log('debug', 'insert category result: %j', result)
 
     if (result.insertedCount === 1) {
-      return product
+      return category
     }
-    throw new Error(`product_insert_error: ${result}`)
+    throw new Error(`category_insert_error: ${result}`)
   } catch (e) {
-    logger.log('error', 'insert product')
+    logger.log('error', 'insert category')
     throw e
   } finally {
     conn || (db && db.close())
@@ -34,19 +33,19 @@ export async function update(doc, conn) {
   let db = null
   try {
     db = conn || await connect() // use outside connection
-    const collection = db.collection('product')
-    const product = _.clone(doc)
+    const collection = db.collection('category')
+    const category = _.clone(doc)
     // insert new one
-    product.updatedAt = new Date()
-    const result = await collection.updateOne(_.pick(product, ['id']), { $set: product })
-    logger.log('debug', 'update product result: %j', result)
+    category.updatedAt = new Date()
+    const result = await collection.updateOne(_.pick(category, ['id']), { $set: category })
+    logger.log('debug', 'update category result: %j', result)
 
     if (result.matchedCount === 1) {
-      return product
+      return category
     }
-    throw new Error(`product_update_error: ${result}`)
+    throw new Error(`category_update_error: ${result}`)
   } catch (e) {
-    logger.log('error', 'update product')
+    logger.log('error', 'update category')
     throw e
   } finally {
     conn || (db && db.close())
@@ -58,35 +57,35 @@ export async function remove(id, conn) {
   let db = null
   try {
     db = conn || await connect() // use outside connection
-    const collection = db.collection('product')
+    const collection = db.collection('category')
     const result = await collection.deleteOne({ id })
-    logger.log('debug', 'delete product: %j', result)
+    logger.log('debug', 'delete category: %j', result)
     if (result.deletedCount === 1) {
       return true
     }
     return false
   } catch (e) {
-    logger.log('error', 'remove product, id: %s', id)
+    logger.log('error', 'remove category, id: %s', id)
     throw e
   } finally {
     conn || (db && db.close())
   }
 }
 
-// find product list
+// find category list
 export async function findList(conn) {
   let db = null
   try {
     db = conn || await connect() // use outside connection
-    const collection = db.collection('product')
+    const collection = db.collection('category')
     const docs = await collection
       // .find({}, {_id: 0})
       .find({})
       .toArray()
-    logger.log('debug', 'find product list: %j', docs)
+    logger.log('debug', 'find category list: %j', docs)
     return docs
   } catch (e) {
-    logger.log('error', 'find product list')
+    logger.log('error', 'find category list')
     throw e
   } finally {
     conn || (db && db.close())
