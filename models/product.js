@@ -1,4 +1,4 @@
-// name 商品名称
+import { ObjectId } from 'mongodb'
 import _ from 'lodash'
 import { nextSeq } from './counter'
 import connect from './db'
@@ -13,7 +13,8 @@ export async function insert(doc, conn) {
     const product = _.clone(doc)
     // insert new one
     product.updatedAt = product.createdAt = new Date()
-    product.id = await nextSeq('product', db)  // generate increased id
+    const id = await nextSeq('product', db)  // generate increased id
+    product.id = id + ''
     const result = await collection.insertOne(product)
     logger.log('debug', 'insert product result: %j', result)
 
@@ -38,7 +39,8 @@ export async function update(doc, conn) {
     const product = _.clone(doc)
     // insert new one
     product.updatedAt = new Date()
-    const result = await collection.updateOne(_.pick(product, ['id']), { $set: product })
+    // const result = await collection.updateOne({ _id: ObjectId(_id) }, { $set: product })
+    const result = await collection.updateOne({ id: product.id }, { $set: product })
     logger.log('debug', 'update product result: %j', result)
 
     if (result.matchedCount === 1) {
@@ -73,15 +75,33 @@ export async function remove(id, conn) {
   }
 }
 
+// find product by id
+export async function findById(id, conn) {
+  let db = null
+  try {
+    db = conn || await connect() // use outside connection
+    const collection = db.collection('product')
+    // const doc = await collection.findOne({ _id: ObjectId(id) })
+    const doc = await collection.findOne({ id })
+    logger.log('debug', 'find product: %j', doc)
+    return doc
+  } catch (e) {
+    logger.log('error', 'find product, id: %s', id)
+    throw e
+  } finally {
+    conn || (db && db.close())
+  }
+}
+
 // find product list
-export async function findList(conn) {
+export async function findList(condition = {}, conn) {
   let db = null
   try {
     db = conn || await connect() // use outside connection
     const collection = db.collection('product')
     const docs = await collection
-      // .find({}, {_id: 0})
-      .find({})
+      .find(condition, { images: 0 })
+      .sort({order: -1})
       .toArray()
     logger.log('debug', 'find product list: %j', docs)
     return docs

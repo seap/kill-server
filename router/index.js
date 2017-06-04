@@ -1,4 +1,5 @@
 import Router from 'koa-router'
+import multer from 'koa-multer'
 import authorize from '../middlewares/authorize'
 import { wechatLogin, updateUserInfo } from '../controllers/user'
 import { login, logout, getUserInfo } from '../controllers/passport'
@@ -8,6 +9,9 @@ import { insertPosition, updatePosition, deletePosition, findPosition, updatePos
 import { insertRole, updateRole, deleteRole, findRole, updateRoleStatus } from '../controllers/role'
 import { insertStaff, updateStaff, deleteStaff, findStaff, updateStaffStatus, updateStaffPassword } from '../controllers/staff'
 import { insertCategory, updateCategory, deleteCategory, findCategory, updateCategoryStatus } from '../controllers/category'
+import { insertProduct, updateProduct, deleteProduct, findProduct, findProductOne, updateProductStatus } from '../controllers/product'
+import { uploadFile, uptoken } from '../controllers/upload'
+// const upload = multer({ dest: 'uploads/' })
 
 const router = new Router({
   prefix: '/api'
@@ -15,7 +19,9 @@ const router = new Router({
 
 router.get('/user/:userId', authorize)
 
-router.post('/')
+// upload
+router.get('/upload/token', uptoken)
+router.post('/upload', uploadFile)
 
 // wechat login
 router.get('/wechat/login/:code', wechatLogin)
@@ -68,5 +74,13 @@ router.post('/category', insertCategory)
 router.put('/category/:id', updateCategory)
 router.put('/category/:id/:status', updateCategoryStatus)
 router.delete('/category/:id', deleteCategory)
+
+// product
+router.get('/product', findProduct)
+router.get('/product/:id', findProductOne)
+router.post('/product', insertProduct)
+router.put('/product/:id', updateProduct)
+router.put('/product/:id/:status', updateProductStatus)
+router.delete('/product/:id', deleteProduct)
 
 export default router

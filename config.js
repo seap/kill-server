@@ -31,3 +31,6 @@ export const mongoUrl = isProduction
 export const mongoOpt = isProduction
   ? {}
   : {}
+
+// upload
+export const fileUploadDest = '/Users/sea/github/kill-server/uploads'

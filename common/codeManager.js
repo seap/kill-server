@@ -27,6 +27,10 @@ export default {
     code: 2002,
     msg: '数据不存在'
   },
+  fileUploadError: {
+    code: 2003,
+    msg: '文件上传异常'
+  },
   dbError: {
     code: 9000,
     msg: '数据库异常'
